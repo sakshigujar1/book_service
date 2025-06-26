@@ -1,32 +1,73 @@
 # Book Management Service
 
+## 📚 Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Folder Structure](#folder-structure)
+- [REST API Endpoints](#rest-api-endpoints)
+- [Data Model](#data-model)
+- [Module Architecture Diagram](#module-architecture-diagram)
+- [Component Diagram](#component-diagram)
+- [Sequence Diagram](#sequence-diagram)
+- [Run Locally](#run-locally)
+
+## Overview
+
 - The Book Management Service is a microservice responsible for handling all book-related operations in the Library Management System. It supports adding, updating, deleting, and retrieving book records. The service is independently deployable and integrated via Eureka Discovery and Spring Cloud Gateway.
 
 ---
 
- Functional Scope
+## Features
 - Add new books to the library
 - Update book information (title, author, genre, etc.)
 - Delete books from the system
 - Retrieve books by ID or search by title
 - Manage available copies for borrowing
+---
+## Folder Structure
+<pre>
+src/
+└── main/
+    ├── java/
+    │   └── com.library.member/
+    │       ├── controller/       # REST controllers
+    │       ├── dto/              # Data Transfer Objects
+    │       ├── entity/           # JPA Entities
+    │       ├── repository/       # Spring Data Repositories
+    │       └── service/          # Business logic layer
+    └── resources/
+        └── application.properties  # App configuration
+</pre>
+---
+##  REST API Endpoints
+
+| Method | Endpoint           | Description                |
+|--------|--------------------|----------------------------|
+| POST   | `/api/books`       | Add a new book             |
+| PUT    | `/api/books/{id}`  | Update existing book       |
+| DELETE | `/api/books/{id}`  | Delete book by ID          |
+| GET    | `/api/books`       | List or search books       |
+| GET    | `/api/books/{id}`  | Get book details by ID     |
+
+Swagger Url : http://localhost:8081/swagger-ui/index.html#/
+
+---
+## Data Model
+ `Book` Entity
+
+| Field            | Type     | Description                    |
+|------------------|----------|--------------------------------|
+| bookId           | BIGINT   | Primary key, auto-generated    |
+| title            | VARCHAR  | Book title                     |
+| author           | VARCHAR  | Author name                    |
+| genre            | VARCHAR  | Book genre/category            |
+| isbn             | VARCHAR  | Unique book identifier         |
+| yearPublished    | INTEGER  | Year of publication            |
+| availableCopies  | INTEGER  | Number of copies available     |
 
 ---
 
- Technology Stack
-
-| Layer              | Technology             |
-|--------------------|------------------------|
-| Language           | Java 17+               |
-| Framework          | Spring Boot 3.x        |
-| REST API Docs      | Springdoc OpenAPI      |
-| ORM & Persistence  | Spring Data JPA        |
-| Database           | MySQL                  |
-| Service Discovery  | Eureka                 |
-| API Gateway        | Spring Cloud Gateway   |
-
----
-Architechture Diagram
+## Module Architecture Diagram
 ```mermaid
 graph TD
     BookController["BookController"]:::controller --> BookService["BookService"]:::service
@@ -43,7 +84,7 @@ graph TD
     class BookRepository repository;
     class Database database;
 ```
-Component diagram
+## Component diagram
 
 ```mermaid
 flowchart LR
@@ -89,7 +130,7 @@ flowchart LR
   class F database
   class G,H model
 ```
-Sequence Diagram
+## Sequence Diagram
 ```mermaid
 
 sequenceDiagram
@@ -110,56 +151,15 @@ sequenceDiagram
   %% Controller/Service/Repo: #d5e8d4 (light green)
   %% DB:       #f3e5f5 (lavender)
 ```
-
+---
+##  Run Locally
  
----
-
-##  REST API Endpoints
-
-| Method | Endpoint           | Description                |
-|--------|--------------------|----------------------------|
-| POST   | `/api/books`       | Add a new book             |
-| PUT    | `/api/books/{id}`  | Update existing book       |
-| DELETE | `/api/books/{id}`  | Delete book by ID          |
-| GET    | `/api/books`       | List or search books       |
-| GET    | `/api/books/{id}`  | Get book details by ID     |
-
-Swagger Url : http://localhost:8081/swagger-ui/index.html#/
-
----
-
- Data Model
-
- `Book` Entity
-
-| Field            | Type     | Description                    |
-|------------------|----------|--------------------------------|
-| bookId           | BIGINT   | Primary key, auto-generated    |
-| title            | VARCHAR  | Book title                     |
-| author           | VARCHAR  | Author name                    |
-| genre            | VARCHAR  | Book genre/category            |
-| isbn             | VARCHAR  | Unique book identifier         |
-| yearPublished    | INTEGER  | Year of publication            |
-| availableCopies  | INTEGER  | Number of copies available     |
-
-
-Service Layer
-Responsible for:
-- Validating book data and ISBN uniqueness
-- CRUD operations for books
-- Business logic for availability tracking
-
-
-Controller Layer
-Responsible for:
-- Handling all public HTTP endpoints
-- Validating input via DTOs
-- Delegating to the service layer
-- Returning appropriate HTTP responses
-
-
-Service Discovery
-Service is registered with Eureka under:
-
-```properties
-spring.application.name=book-service
+```bash
+# Clone this repo
+ 
+# Navigate to the folder
+cd member-service
+ 
+# Build and run
+mvn clean install
+mvn spring-boot:run
